@@ -3,10 +3,10 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: Hello123
+      MYSQL_ROOT_PASSWORD: 1234567
       MYSQL_DATABASE: audio
-      MYSQL_USER: hxben
-      MYSQL_PASSWORD: Hello123
+      MYSQL_USER: dpjprogramming
+      MYSQL_PASSWORD: 1234567
     volumes:
       - ./mysql_data:/var/lib/mysql
     ports:
@@ -19,6 +19,6 @@ services:
       - db
     environment:
       PMA_HOST: db
-      MYSQL_ROOT_PASSWORD: Hello123
+      MYSQL_ROOT_PASSWORD: 1234567
     ports:
       - "8080:80"
