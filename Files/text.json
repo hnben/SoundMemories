@@ -1,0 +1,18 @@
+[
+    {
+        "id": "sad",
+        "name": "Dont worry be happy"
+    },
+    {
+        "id": "happy",
+        "name": "It's a great day!" 
+    },
+    {
+        "id": "encouraging",
+        "name": "You can do it!"
+    },
+    {
+        "id": "random",
+        "name": "I like cheese"
+    }
+]

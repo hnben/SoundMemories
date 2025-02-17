@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors'
+import router from './Routers/router.js'
 
 const app = express();
 
@@ -11,6 +12,9 @@ app.use(express.json());
 app.get('/hello', (req, res) => {
     res.json({message: 'Hello test test from the backend API /hello'})
 })
+
+//routes for proessing server requests
+app.use('/', router);
 
 //express listening port
 const PORT = 3000;
