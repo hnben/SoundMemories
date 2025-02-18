@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.css';
+import MoodButtons from './MoodButtons.jsx';
 
 function App() {
   const [message, setMessage] = useState("");
@@ -27,6 +28,7 @@ function App() {
     <>
       <h1>Sound Memories Frontend Test</h1>
       <p>{message}</p> 
+      <MoodButtons></MoodButtons>
     </>
   );
 }
