@@ -6,6 +6,12 @@ const getFiltered = async (filter) => {
     return filteredList;
 }
 
+const getAll = async () => {
+    const recordingList = await fs.readdir('./Files');
+    return recordingList;
+}
+
 export default{
-    getFiltered
+    getFiltered,
+    getAll
 }

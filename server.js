@@ -6,7 +6,11 @@ const app = express();
 
 //enable cors
 app.use(cors());
+
 app.use(express.json());
+
+//enable static files
+app.use('/Files', express.static('Files'));
 
 //hello API endpoint
 app.get('/hello', (req, res) => {
