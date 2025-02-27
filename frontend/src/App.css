@@ -40,3 +40,23 @@
 .read-the-docs {
   color: #888;
 }
+
+.pill.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.filter-tags {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.audio-list {
+  margin-top: 20px;
+}
+
+audio {
+  display: block;
+  margin-top: 10px;
+}
