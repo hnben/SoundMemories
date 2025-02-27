@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-const HomeRecordings = () => {
+const Recordings = () => {
     const [homeRecordings, setRecordings] = useState([]);
-    const [selectedTag, setSelectedTag] = useState(null);  // To store the selected tag name
+    const [selectedTag, setSelectedTag] = useState(null);
 
-    const tags = ["happy", "sad", "encouraging", "random"]; // List of tag names
+    const tags = ["happy", "sad", "encouraging", "random"];
 
-    // Fetch audio files based on selected tag or fetch all when no tag is selected
+    // Fetch audio files based on selected tag
     useEffect(() => {
         const fetchHomeAudio = async () => {
             try {
-                const tagQuery = selectedTag ? `tag/${selectedTag}` : ''; // Append tag to the endpoint if selected
+                const tagQuery = selectedTag ? `tag/${selectedTag}` : ''; 
                 const audioList = await fetch(`http://localhost:3000/audio/${tagQuery}`);
                 if (!audioList.ok) {
                     throw new Error("Failed to fetch");
@@ -24,11 +24,11 @@ const HomeRecordings = () => {
         };
 
         fetchHomeAudio();
-    }, [selectedTag]); // Fetch data whenever the selectedTag changes
+    }, [selectedTag]);
 
-    // Handle toggling tag selection
+    // Toggle tag selection
     const handleTagToggle = (tag) => {
-        setSelectedTag((prevTag) => (prevTag === tag ? null : tag)); // Toggle the selected tag
+        setSelectedTag((prevTag) => (prevTag === tag ? null : tag));
     };
 
     return (
@@ -52,7 +52,7 @@ const HomeRecordings = () => {
                     <p>No audio files available</p>
                 ) : (
                     homeRecordings.map((file, index) => (
-                        <div key={index}>
+                        <div className="audio-card" key={index}>
                             <label>{file.file_name}</label>
                             <audio controls src={`http://localhost:3000/Files/${file.file_name}`} />
                         </div>
@@ -63,4 +63,4 @@ const HomeRecordings = () => {
     );
 };
 
-export default HomeRecordings;
+export default Recordings;

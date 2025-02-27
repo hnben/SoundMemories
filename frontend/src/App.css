@@ -1,3 +1,11 @@
+/* General page styling */
+body {
+  background-color: #2c2c2c; /* Dark grey background */
+  color: #f5f5f5; /* Light text for contrast */
+  font-family: Arial, sans-serif;
+}
+
+/* Center content and limit width */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -5,58 +13,72 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Tag filter pills */
+.pill {
+  padding: 8px 16px;
+  margin: 5px;
+  border: none;
+  border-radius: 20px;
+  background-color: #444; /* Dark grey pills */
+  color: #f5f5f5; /* Light text for contrast */
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out, transform 0.2s;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.pill:hover {
+  background-color: #555; /* Slightly lighter grey on hover */
 }
 
 .pill.active {
-  background-color: #007bff;
+  background-color: #007bff; /* Blue active pill */
   color: white;
+  transform: scale(1.1);
 }
 
+/* Keep tag buttons in place */
 .filter-tags {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 20px;
+  gap: 10px;
 }
 
+/* Prevent layout shift when filtering */
 .audio-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
   margin-top: 20px;
+  min-height: 300px; /* Set a minimum height */
 }
 
+/* Audio card styling */
+.audio-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 500px;
+  padding: 15px;
+  background-color: #3a3a3a; /* Dark grey card */
+  border-radius: 10px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #555; /* Slight border for depth */
+}
+
+/* Style the file name */
+.audio-card label {
+  font-weight: bold;
+  margin-right: 15px;
+  color: #fff; /* White text for contrast */
+  white-space: nowrap;
+}
+
+/* Make the audio player blend in */
 audio {
-  display: block;
-  margin-top: 10px;
+  flex-grow: 1;
+  max-width: 300px;
+  filter: brightness(90%); /* Adjusted to not be too bright */
 }
