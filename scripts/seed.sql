@@ -5,11 +5,11 @@ INSERT INTO users(username, pass, email) VALUES
 ('jdavies', '$2b$10$5uecNWx1rZeFowD5NOQ4nOjOEtfXdRvBuCMCIxxjrJFRizD5esMZO', 'jonatan.davies@school.edu'),
 ('user123fortynine', '$2b$10$E2l..GydByZaUxU1NT3xFuHEpIJvfkOJWKal681.lxOh9nZ.fargq', 'pizzaplacesnearme@hungrymail.com');
 
-INSERT INTO audio_files(FK_userID, file_name, file_path, uploaded_at, is_external) VALUES
-(1, 'encouraging.mp3', 'Files/encouraging.mp3', NOW(), 0),
-(1, 'happy.mp3', 'Files/happy.mp3', NOW(), 0),
-(1, 'random.mp3', 'Files/random.mp3', NOW(), 0),
-(1, 'sad.mp3', 'Files/sad.mp3', NOW(), 0);
+INSERT INTO audio_files(FK_userID, file_name, file_path, file_desc, uploaded_at, sender, is_external) VALUES
+(1, 'encouraging.mp3', 'Files/encouraging.mp3', 'An encouraging message of support from your buddy David', NOW(), 'David Jarvis', 0),
+(1, 'happy.mp3', 'Files/happy.mp3', 'An uplifting message from Grandma Pam', NOW(), 'Grandma Pam', 0),
+(1, 'random.mp3', 'Files/random.mp3', 'A funny soundbyte from your older brother Joe', NOW(), 'Joe Schmoe', 0),
+(1, 'sad.mp3', 'Files/sad.mp3', 'Something to listen to when you''re feeling blue', NOW(), 'Mom', 0);
 
 INSERT INTO tags(tag_name) VALUES 
 ('encouraging'),
