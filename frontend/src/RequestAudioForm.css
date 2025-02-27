@@ -1,0 +1,138 @@
+* {
+    font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 70vh;
+    position: relative;
+    color: black;
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-content form {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center the form elements */
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 15px;
+    width: 500px; /* Match input width */
+}
+
+.modal-content label {
+    font-size: 20px;
+    margin-bottom: 5px;
+    color: grey;
+    text-align: left;
+}
+
+.modal-content input {
+    font-size: 16px;
+    padding: 16px 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    color: #333;
+    width: 100%; /* Take full width of parent */
+    outline: none;
+}
+
+.modal-content input:focus {
+    border-color: #aaa;
+}
+
+.submit-btn {
+    padding: 10px 100px;
+    background-color: #3f51b5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 20px;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.submit-btn:hover {
+    background-color: #303f9f;
+}
+
+.member-link {
+    text-align: center;
+    font-size: 14px;
+    margin-top: 10px;
+    color: #666;
+    cursor: pointer;
+}
+
+.close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #999;
+}
+
+.radio-toggle {
+    display: flex; /* Use flex to arrange labels */
+    flex-wrap: wrap; /* Allow wrapping onto multiple lines if needed */
+    gap: 10px; /* Add spacing between bubbles */
+  }
+  
+  .radio-input {
+    display: none;
+  }
+  
+  .radio-label {
+    padding: 10px 18px;
+    background-color: #f0f0f0;
+    border-radius: 20px; /* Make them round */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap; /* Prevent text from wrapping */
+  }
+  
+  .radio-input:checked + .radio-label {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .radio-input:disabled + .radio-label {
+    background-color: #eee;
+    color: #aaa;
+    cursor: not-allowed;
+  }
+  
+  .radio-input:checked:disabled + .radio-label {
+    background-color: #999;
+    color: #fff;
+  }
+
+  #tagOptions {
+    padding-bottom: 5px;
+  }
