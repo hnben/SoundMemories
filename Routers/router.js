@@ -1,5 +1,7 @@
 import controller from '../Controllers/controller.js';
 import { createContributionRequest } from '../Controllers/contributeController.js';
+import { uploadAudio, upload } from '../Controllers/uploadController.js'; 
+
 import express from 'express';
 
 const router = express.Router();
@@ -38,5 +40,8 @@ router.post('/audio/remove-tag', controller.removeTag);
 
 // Get audio files by tag name
 router.get('/audio/tag/:tagName', controller.getAudioFilesByTagName);
+
+//upload audio files
+router.post('/upload', upload.single('audio'), uploadAudio);
 
 export default router;
