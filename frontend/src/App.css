@@ -1,36 +1,141 @@
-/* General page styling */
-body {
-  background-color: #2c2c2c; /* Dark grey background */
-  color: #f5f5f5; /* Light text for contrast */
-  font-family: Arial, sans-serif;
+/* ====== General Styling ====== */
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Center content and limit width */
+/* Dark Mode (Default) */
+body {
+  background-color: #242424;
+  color: rgba(255, 255, 255, 0.87);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Root container */
 #root {
+  width: 100%;
+  display: flex;
   max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 0;
   text-align: center;
 }
 
-/* Tag filter pills */
+/* Main layout container */
+.app-container {
+  display: flex;
+  flex-grow: 1;
+  min-height: 100vh;
+}
+
+/* ====== Sidebar ====== */
+.sidebar {
+  width: 220px;
+  background-color: #1e1e1e;
+  color: white;
+  padding: 20px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 3px 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar ul li {
+  width: 100%;
+}
+
+.sidebar a {
+  display: block;
+  text-decoration: none;
+  color: white;
+  background: #333;
+  padding: 12px 15px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.sidebar a:hover {
+  background: #444;
+  transform: translateX(5px);
+}
+
+.sidebar a.active {
+  background: #555;
+  font-weight: bold;
+}
+
+/* ====== Main Content ====== */
+.main-content {
+  flex: 1;
+  padding: 20px;
+}
+
+/* ====== Button Styling ====== */
+button {
+  border-radius: 8px;
+  border: 1px solid transparent;
+  padding: 0.6em 1.2em;
+  font-size: 1em;
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #1a1a1a;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+
+button:hover {
+  border-color: #646cff;
+}
+
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+/* ====== Tag Filter Pills ====== */
 .pill {
   padding: 8px 16px;
   margin: 5px;
   border: none;
   border-radius: 20px;
-  background-color: #444; /* Dark grey pills */
-  color: #f5f5f5; /* Light text for contrast */
+  background-color: #444;
+  color: #f5f5f5;
   cursor: pointer;
   transition: background-color 0.3s ease-in-out, transform 0.2s;
 }
 
 .pill:hover {
-  background-color: #555; /* Slightly lighter grey on hover */
+  background-color: #555;
 }
 
 .pill.active {
-  background-color: #007bff; /* Blue active pill */
+  background-color: #007bff;
   color: white;
   transform: scale(1.1);
 }
@@ -51,7 +156,7 @@ body {
   align-items: center;
   gap: 15px;
   margin-top: 20px;
-  min-height: 300px; /* Set a minimum height */
+  min-height: 300px;
 }
 
 /* Audio card styling */
@@ -62,17 +167,17 @@ body {
   width: 100%;
   max-width: 500px;
   padding: 15px;
-  background-color: #3a3a3a; /* Dark grey card */
+  background-color: #3a3a3a;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-  border: 1px solid #555; /* Slight border for depth */
+  border: 1px solid #555;
 }
 
 /* Style the file name */
 .audio-card label {
   font-weight: bold;
   margin-right: 15px;
-  color: #fff; /* White text for contrast */
+  color: #fff;
   white-space: nowrap;
 }
 
@@ -80,5 +185,63 @@ body {
 audio {
   flex-grow: 1;
   max-width: 300px;
-  filter: brightness(90%); /* Adjusted to not be too bright */
+  filter: brightness(90%);
+}
+
+/* ====== Light Mode ====== */
+@media (prefers-color-scheme: light) {
+  body {
+    color: #213547;
+    background-color: #ffffff;
+  }
+
+  .sidebar {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+
+  .sidebar a {
+    background: #ddd;
+    color: #333;
+  }
+
+  .sidebar a:hover {
+    background: #ccc;
+  }
+
+  .sidebar a.active {
+    background: #bbb;
+  }
+
+  .main-content {
+    color: #213547;
+  }
+
+  button {
+    background-color: #f9f9f9;
+  }
+
+  .pill {
+    background-color: #ddd;
+    color: #333;
+  }
+
+  .pill:hover {
+    background-color: #ccc;
+  }
+
+  .pill.active {
+    background-color: #007bff;
+    color: white;
+  }
+
+  .audio-card {
+    background-color: #f5f5f5;
+    color: #213547;
+    border: 1px solid #ccc;
+  }
+
+  audio {
+    filter: brightness(100%);
+  }
 }
