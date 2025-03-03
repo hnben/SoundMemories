@@ -10,7 +10,9 @@ CREATE TABLE audio_files(
     FK_userID BIGINT,
     file_name VARCHAR(255) NOT NULL,
     file_path VARCHAR(255), -- either this or external_file_url, i believe
+    file_desc VARCHAR(255),
     uploaded_at DATETIME NOT NULL,
+    sender VARCHAR(255),
     is_external TINYINT NOT NULL, -- 0 = false, 1 = true
     external_source VARCHAR(255), -- google drive, dropbox, mediafire, MEGA...
     external_file_id BIGINT UNIQUE, 
