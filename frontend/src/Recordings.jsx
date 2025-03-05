@@ -53,8 +53,9 @@ const Recordings = () => {
                 ) : (
                     homeRecordings.map((file, index) => (
                         <div className="audio-card" key={index}>
-                            <label>{file.file_name}</label>
+                            <h4 className="sender-name">{file.sender}</h4> {/* Sender Name */}
                             <audio controls src={`http://localhost:3000/Files/${file.file_name}`} />
+                            <p className="description">{file.file_desc}</p> {/* Description */}
                         </div>
                     ))
                 )}
