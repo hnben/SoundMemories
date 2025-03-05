@@ -51,8 +51,8 @@ const getById = async (req, res) => {
 // Upload a new audio file
 const uploadAudio = async (req, res) => {
     try {
-        const { userId, fileName, filePath, isExternal, externalSource, externalFileId, externalFileUrl } = req.body;
-        const newFile = await db.uploadAudio(userId, fileName, filePath, isExternal, externalSource, externalFileId, externalFileUrl);
+        const { userId, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileId, externalFileUrl } = req.body;
+        const newFile = await db.uploadAudio(userId, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileId, externalFileUrl);
 
         res.status(201).json({ message: "Audio file uploaded successfully.", newFile });
     } catch (error) {

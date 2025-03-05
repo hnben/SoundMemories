@@ -37,12 +37,12 @@ const getById = async (audioId) => {
 };
 
 // Insert a new audio file
-const uploadAudio = async (userID, fileName, filePath, isExternal, externalSource, externalFileUrl) => {
+const uploadAudio = async (userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
     const query = `
-        INSERT INTO audio_files (FK_userID, file_name, file_path, uploaded_at, is_external, external_source, external_file_url)
-        VALUES (?, ?, ?, NOW(), ?, ?, ?);
+        INSERT INTO audio_files (FK_userID, file_name, file_path, file_desc, uploaded_at, sender, is_external, external_source, external_file_url)
+        VALUES (?, ?, ?, ?, NOW(), ?, ?, ?, ?);
     `;
-    const [result] = await pool.query(query, [userID, fileName, filePath, isExternal, externalSource, externalFileUrl]);
+    const [result] = await pool.query(query, [userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl]);
     return result.insertId;
 };
 
