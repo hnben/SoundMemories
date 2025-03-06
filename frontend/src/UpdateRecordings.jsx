@@ -7,29 +7,45 @@ const UpdateRecordings = () => {
   const [fileDesc, setFileDesc] = useState("");
   const [sender, setSender] = useState("");
   const [audioId, setAudioId] = useState("");
-  const [tags, setTags] = useState({}); // Track tags by audio id
+  const [tags, setTags] = useState({}); // Store tagId
+  const [tagNames, setTagNames] = useState({}); // Store tag_name
+  const [availableTags, setAvailableTags] = useState([]); // Store available tags
 
-  // Fetch audio data and associated tags on mount
+  // Fetch audio data and associated tags
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://localhost:3000/audio/');
-        const data = await response.json();
-        setAudioData(data); // Set all audio data from the database
+        const audioResponse = await fetch('http://localhost:3000/audio/');
+        const audioData = await audioResponse.json();
+        setAudioData(audioData); 
 
         // Fetch tags for each audio file
-        data.forEach(async (audio) => {
+        audioData.forEach(async (audio) => {
           const tagResponse = await fetch(`http://localhost:3000/audio/${audio.id}/tags`);
           const tagData = await tagResponse.json();
-          setTags(prevTags => ({
-            ...prevTags,
-            [audio.id]: tagData[0]?.tag_name || "No tag", // Ensure a default value if no tag is found
-          }));
+
+          if (tagData.length > 0) {
+            setTags(prevTags => ({
+              ...prevTags,
+              [audio.id]: tagData[0].id, // Store tagId
+            }));
+
+            setTagNames(prevTagNames => ({
+              ...prevTagNames,
+              [audio.id]: tagData[0].tag_name, // Store tag_name separately
+            }));
+          }
         });
+
+        // Fetch available tags for the dropdown
+        const tagResponse = await fetch('http://localhost:3000/tags');
+        const tagList = await tagResponse.json();
+        setAvailableTags(tagList);
       } catch (error) {
         console.error('Error fetching audio data:', error);
       }
     };
+
     fetchData();
   }, []);
 
@@ -44,28 +60,31 @@ const UpdateRecordings = () => {
   const handleSaveClick = async () => {
     setIsEditing(false);
     const updatedData = { 
-      fileId: audioId, 
-      fileDesc: fileDesc, 
-      sender: sender 
+      audioId: audioId,  
+      tagId: tags[audioId],  // Send tagId
     };
 
     try {
-      const response = await fetch(`http://localhost:3000/audio/update`, {
+      const response = await fetch('http://localhost:3000/audio/update/tags', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(updatedData),
       });
+
       const result = await response.json();
       console.log('Updated audio data:', result);
 
-      // Update the audio data locally after the save
-      setAudioData(prevData => 
-        prevData.map(audio => 
-          audio.id === audioId ? { ...audio, file_desc: fileDesc, sender: sender } : audio
-        )
-      );
+      if (response.ok) {
+        // Update UI to reflect changes
+        setTagNames(prevTagNames => ({
+          ...prevTagNames,
+          [audioId]: availableTags.find(tag => tag.id === tags[audioId])?.tag_name || "No Tag"
+        }));
+      } else {
+        console.error('Failed to update audio file');
+      }
     } catch (error) {
       console.error('Error updating audio data:', error);
     }
@@ -79,7 +98,7 @@ const UpdateRecordings = () => {
       });
       const result = await response.json();
       console.log('Audio file deleted:', result);
-      setAudioData(audioData.filter(audio => audio.id !== audioId)); // Remove the deleted audio from the list
+      setAudioData(audioData.filter(audio => audio.id !== audioId));
     } catch (error) {
       console.error('Error deleting audio:', error);
     }
@@ -127,10 +146,39 @@ const UpdateRecordings = () => {
               )}
             </div>
 
-            {/* Tag Display (Pill Style) */}
+            {/* Tag Display */}
             <div className="tag-row">
-              {tags[audio.id] && <span className="tag-pill">{tags[audio.id]}</span>}
+              <span className="tag-pill">
+                {tagNames[audio.id] || "No Tag"}
+              </span>
             </div>
+
+            {/* Tag Edit */}
+            {isEditing && audio.id === audioId && (
+              <div className="tag-edit-row">
+                <select
+                  value={tags[audio.id] || ""}
+                  onChange={(e) => {
+                    const selectedTagId = Number(e.target.value);
+                    setTags(prevTags => ({
+                      ...prevTags,
+                      [audio.id]: selectedTagId, // Store tagId
+                    }));
+                    setTagNames(prevTagNames => ({
+                      ...prevTagNames,
+                      [audio.id]: availableTags.find(tag => tag.id === selectedTagId)?.tag_name || "No Tag",
+                    }));
+                  }}
+                >
+                  <option value="">Select Tag</option>
+                  {availableTags.map((tag) => (
+                    <option key={tag.id} value={tag.id}>
+                      {tag.tag_name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* Buttons */}
             <div className="buttons-container">
