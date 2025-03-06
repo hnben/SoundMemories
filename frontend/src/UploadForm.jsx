@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import './UploadForm.css'; // Import the CSS file
 
 const UploadForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -73,24 +74,24 @@ const UploadForm = () => {
 
   return (
     <>
-      <button onClick={() => setIsOpen(true)} className="bg-blue-500 text-white px-4 py-2 rounded">Upload Audio</button>
+      <button onClick={() => setIsOpen(true)} className="upload-button">Upload Audio</button>
       {isOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-          <div className="bg-white p-6 rounded shadow-lg">
-            <h2 className="text-xl mb-4">Upload Audio</h2>
-            <form onSubmit={handleSubmit}>
-              <input type="file" accept="audio/*" onChange={handleFileChange} required />
-              <input type="text" placeholder="Sender Name" value={sender} onChange={handleSenderChange} required className="block w-full mt-2 p-2 border" />
-              <input type="text" placeholder="Description (optional)" value={description} onChange={handleDescriptionChange} className="block w-full mt-2 p-2 border" />
-              <select value={selectedTag} onChange={handleTagChange} className="block w-full mt-2 p-2 border">
+        <div className="overlay">
+          <div className="form-container">
+            <h2 className="form-heading">Upload Audio</h2>
+            <form onSubmit={handleSubmit} className="upload-form">
+              <input type="file" accept="audio/*" onChange={handleFileChange} required className="file-input"/>
+              <input type="text" placeholder="Sender Name" value={sender} onChange={handleSenderChange} required className="text-input" />
+              <input type="text" placeholder="Description (optional)" value={description} onChange={handleDescriptionChange} className="text-input" />
+              <select value={selectedTag} onChange={handleTagChange} className="select-input">
                 <option value="">Select Tag (Optional)</option>
                 {tags.map(tag => (
                   <option key={tag.id} value={tag.id}>{tag.tag_name}</option>
                 ))}
               </select>
-              <div className="mt-4 flex justify-end">
-                <button type="button" onClick={() => setIsOpen(false)} className="mr-2 px-4 py-2 border rounded">Cancel</button>
-                <button type="submit" className="bg-green-500 text-white px-4 py-2 rounded">Upload</button>
+              <div className="button-container">
+                <button type="button" onClick={() => setIsOpen(false)} className="cancel-button">Cancel</button>
+                <button type="submit" className="submit-button">Upload</button>
               </div>
             </form>
           </div>
