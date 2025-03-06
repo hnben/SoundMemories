@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import './UploadForm.css'; // Import the CSS file
+import './UploadForm.css';
 
 const UploadForm = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -45,7 +45,7 @@ const UploadForm = () => {
           userId: 1,
           fileName: uploadData.filename,
           filePath,
-          fileDesc: description, // Ensure 'file_desc' matches the backend expectation
+          fileDesc: description,
           sender,
           isExternal: 0,
           externalSource: "",

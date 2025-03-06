@@ -103,6 +103,70 @@ const getAudioFilesByTagName = async (tagName) => {
     return rows;
 };
 
+// Database function to update audio file metadata
+const updateAudio = async (fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
+    // Constructing the SET clause dynamically based on the provided data
+    let setClause = '';
+    let values = [];
+
+    // Dynamically build the setClause and values array based on provided data
+    if (fileName) {
+        setClause += 'file_name = ?, ';
+        values.push(fileName);
+    }
+    if (fileDesc) {
+        setClause += 'file_desc = ?, ';
+        values.push(fileDesc);
+    }
+    if (sender) {
+        setClause += 'sender = ?, ';
+        values.push(sender);
+    }
+    if (isExternal !== undefined) {
+        setClause += 'is_external = ?, ';
+        values.push(isExternal);
+    }
+    if (externalSource) {
+        setClause += 'external_source = ?, ';
+        values.push(externalSource);
+    }
+    if (externalFileUrl) {
+        setClause += 'external_file_url = ? ';
+        values.push(externalFileUrl);
+    }
+
+    // Remove the trailing comma and space
+    setClause = setClause.trim().replace(/,$/, '');
+
+    // Append the WHERE clause with the fileId
+    const query = `
+        UPDATE audio_files
+        SET ${setClause}
+        WHERE id = ?;
+    `;
+
+    // Add fileId as the last value
+    values.push(fileId);
+
+    try {
+        const [result] = await pool.query(query, values);
+
+        // If no rows were updated, return null (audio file not found)
+        if (result.affectedRows === 0) {
+            return null;
+        }
+
+        // Fetch and return the updated audio file
+        const updatedFileQuery = 'SELECT * FROM audio_files WHERE id = ?';
+        const [updatedFile] = await pool.query(updatedFileQuery, [fileId]);
+
+        return updatedFile[0]; // Return the updated file record
+    } catch (error) {
+        console.error("Error updating audio file:", error);
+        throw new Error("Failed to update audio file.");
+    }
+};
+
 // Export all functions
 export default {
     getAll,
@@ -115,5 +179,6 @@ export default {
     addTag,
     assignTag,
     removeTag,
-    getAudioFilesByTagName
+    getAudioFilesByTagName,
+    updateAudio
 };

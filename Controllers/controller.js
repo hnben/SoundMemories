@@ -137,7 +137,27 @@ const getAudioFilesByTagName = async (req, res) => {
     }
 };
 
+// Update an existing audio file's metadata
+const updateAudio = async (req, res) => {
+    try {
+        const { fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl } = req.body;
 
+        // Call the updateAudio function from the database
+        const updatedFile = await db.updateAudio(fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl);
+
+        if (!updatedFile) {
+            return res.status(404).json({ message: "Audio file not found or no changes made." });
+        }
+
+        res.status(200).json({
+            message: "Audio file updated successfully.",
+            updatedFile
+        });
+    } catch (error) {
+        console.error("Error in updateAudio:", error);
+        res.status(500).json({ message: "Internal server error." });
+    }
+};
 
 export default {
     getAll,
@@ -149,5 +169,6 @@ export default {
     getTagsByAudioId,
     assignTag,
     removeTag,
-    getAudioFilesByTagName
+    getAudioFilesByTagName,
+    updateAudio
 };
