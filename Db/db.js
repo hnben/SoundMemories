@@ -46,12 +46,10 @@ const uploadAudio = async (userID, fileName, filePath, fileDesc, sender, isExter
     return result.insertId;
 };
 
-// Delete an audio file
+//delete the audio files with associated ID
 const deleteAudio = async (audioId) => {
-    // Remove the tag associations first
-    await pool.query(`DELETE FROM audio_file_tags WHERE FK_audio_id = ?`, [audioId]);
-    // Then delete the audio file itself
-    await pool.query(`DELETE FROM audio_files WHERE id = ?`, [audioId]);
+    const [result] = await pool.query(`DELETE FROM audio_files WHERE id = ?`, [audioId]);
+    return result;
 };
 
 // Fetch all tags
