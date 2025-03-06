@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import './UpdateRecordings.css';
 
 const UpdateRecordings = () => {
   const [audioData, setAudioData] = useState([]);
@@ -74,56 +75,59 @@ const UpdateRecordings = () => {
   };
 
   return (
-    <div className="audio-cards-container">
+    <div className="recording-cards-container">
       {audioData.length > 0 ? (
         audioData.map((audio) => (
-          <div className="audio-card" key={audio.id}>
-            {/* Audio Player */}
-            <audio controls>
-              <source src={`http://localhost:3000/${audio.file_path}`} type="audio/mp3" />
-              Your browser does not support the audio element.
-            </audio>
+          <div className="recording-card" key={audio.id}>
+            {/* Sender */}
+            <div className="sender-row">
+              {isEditing && audio.id === audioId ? (
+                <input
+                  type="text"
+                  value={sender}
+                  onChange={(e) => setSender(e.target.value)}
+                  className="sender-input"
+                />
+              ) : (
+                <span className="sender">{audio.sender}</span>
+              )}
+            </div>
 
-            {/* File Description Editing */}
-            <p>
+            {/* Audio Element */}
+            <div className="audio-row">
+              <audio controls>
+                <source src={`http://localhost:3000/${audio.file_path}`} type="audio/mp3" />
+                Your browser does not support the audio element.
+              </audio>
+            </div>
+
+            {/* Description */}
+            <div className="description-row">
               <strong>Description:</strong>
               {isEditing && audio.id === audioId ? (
                 <input
                   type="text"
                   value={fileDesc}
                   onChange={(e) => setFileDesc(e.target.value)}
+                  className="description-input"
                 />
               ) : (
-                <span>{audio.file_desc}</span>
+                <span className="description">{audio.file_desc}</span>
               )}
-            </p>
+            </div>
 
-            {/* Sender Editing */}
-            <p>
-              <strong>Sender:</strong>
-              {isEditing && audio.id === audioId ? (
-                <input
-                  type="text"
-                  value={sender}
-                  onChange={(e) => setSender(e.target.value)}
-                />
-              ) : (
-                <span>{audio.sender}</span>
-              )}
-            </p>
-
-            {/* Buttons at the bottom */}
+            {/* Buttons */}
             <div className="buttons-container">
               <div>
                 {isEditing && audio.id === audioId ? (
-                  <button onClick={handleSaveClick}>Save</button>
+                  <button onClick={handleSaveClick} className="save-button">Save</button>
                 ) : (
-                  <button onClick={() => handleEditClick(audio.id, audio.file_desc, audio.sender)}>Edit</button>
+                  <button onClick={() => handleEditClick(audio.id, audio.file_desc, audio.sender)} className="edit-button">Edit</button>
                 )}
               </div>
 
               <div>
-                <button onClick={() => handleDeleteClick(audio.id)}>Delete Audio</button>
+                <button onClick={() => handleDeleteClick(audio.id)} className="delete-button">Delete Audio</button>
               </div>
             </div>
           </div>

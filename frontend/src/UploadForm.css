@@ -1,115 +1,117 @@
 /* UploadForm styling */
 .upload-button {
-    background-color: #1a73e8;
-    color: white;
-    padding: 0.8em 1.5em;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .upload-button:hover {
-    background-color: #1558b0;
-  }
-  
-  .overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
+  background-color: #1a73e8;
+  color: white;
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.upload-button:hover {
+  background-color: #1558b0;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure overlay is above other content */
+}
+
+.form-container {
+  background-color: #2a2a2a;
+  padding: 2em;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 600px;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+  position: relative; /* Ensure stacking context */
+  z-index: 1010; /* Ensure modal content is above overlay */
+}
+
+.form-heading {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 1.2em;
+  text-align: center;
+}
+
+.upload-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+
+.file-input, .text-input, .select-input {
+  width: 100%;
+  padding: 0.8em;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background-color: #333;
+  color: white;
+}
+
+.file-input[type="file"] {
+  background-color: #444;
+}
+
+.text-input::placeholder,
+.select-input::placeholder {
+  color: #ccc;
+}
+
+.select-input {
+  background-color: #444;
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1em;
+}
+
+.cancel-button, .submit-button {
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.cancel-button {
+  background-color: #444;
+  color: white;
+}
+
+.cancel-button:hover {
+  background-color: #666;
+}
+
+.submit-button {
+  background-color: #28a745;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #218838;
+}
+
+@media (max-width: 600px) {
   .form-container {
-    background-color: #2a2a2a;
-    padding: 2em;
-    border-radius: 12px;
-    width: 80%;
-    max-width: 600px;
-    color: white;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-  }
-  
-  .form-heading {
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin-bottom: 1.2em;
-    text-align: center;
-  }
-  
-  .upload-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1em;
-  }
-  
-  .file-input, .text-input, .select-input {
-    width: 100%;
-    padding: 0.8em;
-    font-size: 1rem;
-    border-radius: 8px;
-    border: 1px solid #444;
-    background-color: #333;
-    color: white;
-  }
-  
-  .file-input[type="file"] {
-    background-color: #444;
-  }
-  
-  .text-input::placeholder,
-  .select-input::placeholder {
-    color: #ccc;
-  }
-  
-  .select-input {
-    background-color: #444;
-  }
-  
-  .button-container {
-    display: flex;
-    justify-content: flex-end;
-    gap: 1em;
-  }
-  
-  .cancel-button, .submit-button {
-    padding: 0.8em 1.5em;
-    border-radius: 8px;
-    border: 1px solid transparent;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 600;
-    transition: background-color 0.3s ease;
-  }
-  
-  .cancel-button {
-    background-color: #444;
-    color: white;
-  }
-  
-  .cancel-button:hover {
-    background-color: #666;
-  }
-  
-  .submit-button {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .submit-button:hover {
-    background-color: #218838;
-  }
-  
-  @media (max-width: 600px) {
-    .form-container {
       padding: 1.5em;
       width: 90%;
-    }
   }
-  
+}
