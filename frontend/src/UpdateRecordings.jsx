@@ -49,7 +49,7 @@ const UpdateRecordings = () => {
     fetchData();
   }, []);
 
-  // Handle editing of file description and sender
+  // Handle editing of file description, sender, and tags
   const handleEditClick = (id, desc, sender) => {
     setIsEditing(true);
     setAudioId(id);
@@ -59,34 +59,71 @@ const UpdateRecordings = () => {
 
   const handleSaveClick = async () => {
     setIsEditing(false);
-    const updatedData = { 
-      audioId: audioId,  
-      tagId: tags[audioId],  // Send tagId
+
+    // 1. Update audio details (sender and description)
+    const audioDataToUpdate = { 
+      fileId: audioId,  
+      sender: sender,      
+      fileDesc: fileDesc     
     };
 
     try {
-      const response = await fetch('http://localhost:3000/audio/update/tags', {
+      // Send PUT request to update sender and description
+      const response = await fetch('http://localhost:3000/audio/update', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(updatedData),
+        body: JSON.stringify(audioDataToUpdate),
       });
 
       const result = await response.json();
       console.log('Updated audio data:', result);
 
       if (response.ok) {
-        // Update UI to reflect changes
-        setTagNames(prevTagNames => ({
-          ...prevTagNames,
-          [audioId]: availableTags.find(tag => tag.id === tags[audioId])?.tag_name || "No Tag"
-        }));
+        // Update UI to reflect changes in sender and description
+        setAudioData(prevData => 
+          prevData.map(audio => 
+            audio.id === audioId ? { ...audio, file_desc: fileDesc, sender: sender } : audio
+          )
+        );
       } else {
         console.error('Failed to update audio file');
       }
     } catch (error) {
       console.error('Error updating audio data:', error);
+    }
+
+    // 2. Update tags
+    const tagDataToUpdate = {
+      audioId: audioId,
+      tagId: tags[audioId]
+    };
+
+    try {
+      // Send PUT request to update tag
+      const tagResponse = await fetch('http://localhost:3000/audio/update/tags', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(tagDataToUpdate),
+      });
+
+      const tagResult = await tagResponse.json();
+      console.log('Updated tag:', tagResult);
+
+      if (tagResponse.ok) {
+        // Update UI to reflect changes in tag
+        setTagNames(prevTagNames => ({
+          ...prevTagNames,
+          [audioId]: availableTags.find(tag => tag.id === tags[audioId])?.tag_name || "No Tag",
+        }));
+      } else {
+        console.error('Failed to update tag');
+      }
+    } catch (error) {
+      console.error('Error updating tag:', error);
     }
   };
 
@@ -98,7 +135,7 @@ const UpdateRecordings = () => {
       });
       const result = await response.json();
       console.log('Audio file deleted:', result);
-      setAudioData(audioData.filter(audio => audio.id !== audioId));
+      setAudioData(audioData.filter(audio => audio.id !== audioId)); // Remove the deleted audio from the list
     } catch (error) {
       console.error('Error deleting audio:', error);
     }
