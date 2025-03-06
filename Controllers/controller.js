@@ -159,6 +159,28 @@ const updateAudio = async (req, res) => {
     }
 };
 
+const updateTags = async (req, res) => {
+    try {
+        const { audioId, tagId } = req.body;
+        if (!audioId || !tagId) {
+            return res.status(400).json({ error: "Missing required fields: audioId and tagId" });
+        }
+
+        const result = await db.updateTags(audioId, tagId);
+
+        if (!result.success) {
+            return res.status(404).json({ error: "No matching audio file found to update" });
+        }
+
+        res.status(200).json({ message: "Tags updated successfully" });
+    } catch (error) {
+        console.error("Error updating tags:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+
+
 export default {
     getAll,
     getFiltered,
@@ -170,5 +192,6 @@ export default {
     assignTag,
     removeTag,
     getAudioFilesByTagName,
-    updateAudio
+    updateAudio,
+    updateTags
 };

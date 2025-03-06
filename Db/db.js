@@ -165,6 +165,19 @@ const updateAudio = async (fileId, fileName, fileDesc, sender, isExternal, exter
     }
 };
 
+const updateTags = async (audioId, tagId) => {
+    try {
+        // Run the update query
+        const [result] = await pool.query("UPDATE audio_file_tags SET FK_tag_id = ? WHERE FK_audio_id = ?", [tagId, audioId]);
+
+        // Return the result to the controller
+        return { success: result.affectedRows > 0 };
+    } catch (error) {
+        console.error("Error updating tags:", error);
+        throw error;  // Rethrow the error to be caught by the controller
+    }
+};
+
 // Export all functions
 export default {
     getAll,
@@ -178,5 +191,6 @@ export default {
     assignTag,
     removeTag,
     getAudioFilesByTagName,
-    updateAudio
+    updateAudio,
+    updateTags
 };

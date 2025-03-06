@@ -47,4 +47,7 @@ router.post('/upload', upload.single('audio'), uploadAudio);
 //update audio files data
 router.put('/audio/update', controller.updateAudio);
 
+//update tags 
+router.put('/audio/update/tags', controller.updateTags);
+
 export default router;
