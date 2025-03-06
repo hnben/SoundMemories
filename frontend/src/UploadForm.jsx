@@ -66,6 +66,7 @@ const UploadForm = () => {
 
       alert("Audio uploaded successfully");
       setIsOpen(false);
+      window.location.reload();
     } catch (error) {
       console.error("Upload error:", error);
       alert("Upload failed");
