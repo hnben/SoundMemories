@@ -28,7 +28,7 @@ CREATE TABLE tags(
 CREATE TABLE audio_file_tags(
     FK_audio_id BIGINT,
     FK_tag_id BIGINT,
-    FOREIGN KEY (FK_audio_id) REFERENCES audio_files(id),
+    FOREIGN KEY (FK_audio_id) REFERENCES audio_files(id) ON DELETE CASCADE,
     FOREIGN KEY (FK_tag_id) REFERENCES tags(id),
     PRIMARY KEY (FK_audio_id, FK_tag_id)
 );
