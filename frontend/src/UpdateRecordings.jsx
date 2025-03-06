@@ -7,14 +7,25 @@ const UpdateRecordings = () => {
   const [fileDesc, setFileDesc] = useState("");
   const [sender, setSender] = useState("");
   const [audioId, setAudioId] = useState("");
+  const [tags, setTags] = useState({}); // Track tags by audio id
 
-  // Fetch audio data on mount
+  // Fetch audio data and associated tags on mount
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await fetch('http://localhost:3000/audio/');
         const data = await response.json();
         setAudioData(data); // Set all audio data from the database
+
+        // Fetch tags for each audio file
+        data.forEach(async (audio) => {
+          const tagResponse = await fetch(`http://localhost:3000/audio/${audio.id}/tags`);
+          const tagData = await tagResponse.json();
+          setTags(prevTags => ({
+            ...prevTags,
+            [audio.id]: tagData[0]?.tag_name || "No tag", // Ensure a default value if no tag is found
+          }));
+        });
       } catch (error) {
         console.error('Error fetching audio data:', error);
       }
@@ -114,6 +125,11 @@ const UpdateRecordings = () => {
               ) : (
                 <span className="description">{audio.file_desc}</span>
               )}
+            </div>
+
+            {/* Tag Display (Pill Style) */}
+            <div className="tag-row">
+              {tags[audio.id] && <span className="tag-pill">{tags[audio.id]}</span>}
             </div>
 
             {/* Buttons */}

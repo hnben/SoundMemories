@@ -147,4 +147,15 @@
       background-color: #c82333;
     }
   }
+  .tag-pill {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-top: 5px;
+    background-color: #f0f0f0;
+    color: #333;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1px solid #ddd;
+  }
   
