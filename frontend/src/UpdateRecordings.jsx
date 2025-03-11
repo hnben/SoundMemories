@@ -129,15 +129,18 @@ const UpdateRecordings = () => {
 
   // Handle deleting audio file
   const handleDeleteClick = async (audioId) => {
-    try {
-      const response = await fetch(`http://localhost:3000/audio/${audioId}`, {
-        method: 'DELETE',
-      });
-      const result = await response.json();
-      console.log('Audio file deleted:', result);
-      setAudioData(audioData.filter(audio => audio.id !== audioId)); // Remove the deleted audio from the list
-    } catch (error) {
-      console.error('Error deleting audio:', error);
+    if(window.confirm(`Are you sure you want to delete this recording from Sound Memories? This action can't be undone!`))
+    {
+      try {
+        const response = await fetch(`http://localhost:3000/audio/${audioId}`, {
+          method: 'DELETE',
+        });
+        const result = await response.json();
+        console.log('Audio file deleted:', result);
+        setAudioData(audioData.filter(audio => audio.id !== audioId)); // Remove the deleted audio from the list
+      } catch (error) {
+        console.error('Error deleting audio:', error);
+      }
     }
   };
 
