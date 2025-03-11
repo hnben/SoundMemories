@@ -3,12 +3,13 @@ import mysql from 'mysql2/promise';
 // Create MySQL connection pool
 const pool = mysql.createPool({
     host: 'localhost',  
-    user: 'hxben',       // Change to your MySQL username
-    password: 'Hello123', // Change to your password
-    database: 'chiliOil', // Change to your db name
+    user: 'dpjprogramming',       // Change to your MySQL username
+    password: '1234567', // Change to your password
+    database: 'audio', // Change to your db name
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    port: 3307
 });
 
 // Fetch all audio files
