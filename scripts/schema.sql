@@ -32,3 +32,8 @@ CREATE TABLE audio_file_tags(
     FOREIGN KEY (FK_tag_id) REFERENCES tags(id),
     PRIMARY KEY (FK_audio_id, FK_tag_id)
 );
+
+CREATE TABLE links (
+    id BIGINT AUTO_INCREMENT UNIQUE NOT NULL PRIMARY KEY,
+    links VARCHAR(255) NOT NULL
+)
