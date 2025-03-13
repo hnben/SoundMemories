@@ -1,0 +1,61 @@
+/* RecordView styling */
+.recording-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  margin-top: -20px;
+  width: 80%;
+  max-width: 600px;
+  color: white;
+}
+
+.recording-controls h2 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 1.2em;
+}
+
+.recording-controls button {
+  padding: 0.8em 1.5em;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 0.5em;
+}
+
+audio {
+  width: 100%;
+  margin-top: 1em;
+  border-radius: 8px;
+}
+
+.start-recording-button {
+  background-color: #28a745; /* Green */
+  color: white;
+}
+
+.start-recording-button:hover {
+  background-color: #218838;
+}
+
+.stop-recording-button {
+  background-color: #dc3545; /* Red */
+  color: white;
+}
+
+.stop-recording-button:hover {
+  background-color: #a31e2b;
+}
+
+.upload-audio-button {
+  background-color: #1a73e8; /* Blue */
+  color: white;
+}
+
+.upload-audio-button:hover {
+  background-color: #1558b0;
+}
