@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow } from 'electron';
 import process from 'child_process';
 import { dirname } from 'path';
 import { fileURLToPath } from 'url';
@@ -12,7 +12,7 @@ const back = process.spawn('npm', ['run', 'dev'], {
 });
 
 const front = process.spawn('npm', ['run', 'dev'], {
-    cwd: `${__dirname}./frontend`,
+    cwd: `${__dirname}/frontend`,
     stdio: 'inherit',
     shell: true
 });
@@ -21,23 +21,41 @@ const createWindow = () => {
   const win = new BrowserWindow({
     width: 800,
     height: 600
-  })
+  });
 
-  win.loadURL('http://localhost:5173')
-}
+  win.loadURL('http://localhost:5173');
+};
 
 app.whenReady().then(() => {
-    createWindow()
+    createWindow();
   
     app.on('activate', () => {
       if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow()
+        createWindow();
       }
-    })
-  })
+    });
+});
   
-  app.on('window-all-closed', () => {
+app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit()
+        app.quit();
+
+        // Stop front and backend servers
+        back.kill('SIGTERM');
+        front.kill('SIGTERM');
+        
+        // Kill all node processes
+        killAllNodeProcesses();
     }
-  })
+});
+
+// Function to kill all node processes
+function killAllNodeProcesses() {
+  process.exec('taskkill /F /IM node.exe', (error, stdout, stderr) => {
+      if (error || stderr) {
+          console.error(`Error killing node processes: ${error || stderr}`);
+          return;
+      }
+      console.log('Successfully killed all node processes');
+  });
+}
