@@ -1,15 +1,22 @@
 import mysql from 'mysql2/promise';
+import dotenv from 'dotenv';
 
-// Create MySQL connection pool
+dotenv.config({
+    path: './config.env'
+});
+
+const { USER, PASSWORD, DATABASE, HOST, PORT } = process.env;
+
+// Create MySQL connection pool using config file
 const pool = mysql.createPool({
-    host: 'localhost',  
-    user: 'hxben',       // Change to your MySQL username
-    password: 'Hello123', // Change to your password
-    database: 'audio', // Change to your db name
+    user: USER,
+    password: PASSWORD,
+    database: DATABASE,
+    host: HOST,
+    port: PORT,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    port: 3306
 });
 
 const createContributionRequest = async (link) => {
