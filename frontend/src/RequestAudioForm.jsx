@@ -1,8 +1,10 @@
 import './RequestAudioForm.css';
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import CopyLink from './CopyLink.jsx';
 
-const Modal = ({ isOpen, onClose, children }) => {
+const RequestAudioForm = ({ isOpen, onClose, children }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [inputValue1, setInputValue1] = useState('');
   const [inputValue2, setInputValue2] = useState('');
   const [inputValue3, setInputValue3] = useState('');
@@ -37,7 +39,7 @@ const Modal = ({ isOpen, onClose, children }) => {
     console.log('Input 2:', inputValue2);
     console.log('Input 3:', inputValue3);
     console.log('Selected Tag:', selectedTag);
-    onClose();
+    setIsModalOpen(true);
   };
 
   return (
@@ -104,16 +106,21 @@ const Modal = ({ isOpen, onClose, children }) => {
           </div>
           <button className="submit-btn" type="submit">Submit</button>
         </form>
+        <CopyLink
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          link="http://localhost:5173/contribute/3cq2i8eojyd1wb9jy03yem9mxkhajmga"
+        />
         {children}
       </div>
     </div>
   );
 };
 
-Modal.propTypes = {
+RequestAudioForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   children: PropTypes.node,
 };
 
-export default Modal;
+export default RequestAudioForm;
