@@ -1,5 +1,9 @@
 import db from '../Db/db.js';
 
+// function generateUniqueLink() {
+//     return `http://localhost:3000/contribute/${randomUUID()}`;
+// }
+
 // const createContributionRequest = async (req, res) => {
 //     try {
 //         // Generate a unique link
