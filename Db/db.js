@@ -3,14 +3,20 @@ import mysql from 'mysql2/promise';
 // Create MySQL connection pool
 const pool = mysql.createPool({
     host: 'localhost',  
-    user: 'dpjprogramming',       // Change to your MySQL username
-    password: '1234567', // Change to your password
+    user: 'hxben',       // Change to your MySQL username
+    password: 'Hello123', // Change to your password
     database: 'audio', // Change to your db name
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    port: 3307
+    port: 3306
 });
+
+const createContributionRequest = async (link) => {
+    const query = 'INSERT INTO generated_links (link) VALUES (?);';
+    const [result] = await pool.query(query, [link]);
+    return result.link;
+};
 
 // Fetch all audio files
 const getAll = async () => {
@@ -181,6 +187,7 @@ const updateTags = async (audioId, tagId) => {
 
 // Export all functions
 export default {
+    createContributionRequest,
     getAll,
     getFiltered,
     getById,

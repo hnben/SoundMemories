@@ -1,5 +1,23 @@
 import db from '../Db/db.js';
 
+// const createContributionRequest = async (req, res) => {
+//     try {
+//         // Generate a unique link
+//         const uniqueLink = generateUniqueLink();
+        
+//         console.log('Generated Unique Link:', uniqueLink);
+
+//         // Insert the unique link into the database
+//         const newLink = await db.createContributionRequest(uniqueLink);
+
+//         // Respond with the new link
+//         res.status(201).json({ message: 'Success', link: newLink });
+//     } catch (error) {
+//         console.error('Error creating contribution request:', error);
+//         res.status(500).json({ message: 'Error creating request' });
+//     }
+// };
+
 // Get all audio files
 const getAll = async (req, res) => {
     try {
@@ -182,6 +200,7 @@ const updateTags = async (req, res) => {
 
 
 export default {
+    // createContributionRequest,
     getAll,
     getFiltered,
     getById,

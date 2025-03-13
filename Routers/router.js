@@ -1,14 +1,12 @@
 import controller from '../Controllers/controller.js';
-import { createContributionRequest } from '../Controllers/contributeController.js';
-import { uploadAudio, upload } from '../Controllers/uploadController.js'; 
-
 import express from 'express';
+import { uploadAudio, upload } from '../Controllers/uploadController.js'; 
 
 const router = express.Router();
 
-//will's thing
-router.post('/api/contribute/request', createContributionRequest);
-
+// Upload a generated link
+// router.post('/contribute', controller.createContributionRequest);
+// router.get('/contribution/:id', controller.getGeneratedLink)
 
 //endpoints to do stuff with the database
 // Get all audio files
