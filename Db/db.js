@@ -1,38 +1,46 @@
-import mysql from 'mysql2/promise';
-import dotenv from 'dotenv';
+import Database from 'better-sqlite3';
+import { initalizeSchema } from './schema.js';
+import { plantSeeds } from './seed.js';
 
-dotenv.config({
-    path: './config.env'
-});
+// Create SQLite connection
+const db = new Database('audio.sqlite', {
+    //logs to an output stream
+    verbose: log
+  });
 
-const { USER, PASSWORD, DATABASE, HOST, PORT } = process.env;
+//set up the database
+initalizeSchema(db);
+plantSeeds(db);
 
-// Create MySQL connection pool using config file
-const pool = mysql.createPool({
-    user: USER,
-    password: PASSWORD,
-    database: DATABASE,
-    host: HOST,
-    port: PORT,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-});
+const createContributionRequest = (link) => {
+    const insertQuery = 'INSERT INTO generated_links (link) VALUES (?);';
+    const selectQuery = 'SELECT link FROM generated_links WHERE id = ?;';
 
-const createContributionRequest = async (link) => {
-    const query = 'INSERT INTO generated_links (link) VALUES (?);';
-    const [result] = await pool.query(query, [link]);
-    return result.link;
+    const statement = db.prepare(insertQuery);
+
+    //run the INSERT statement
+    const result = statement.run(link);
+
+    //get the new link out of the DB
+    const row = db.prepare(selectQuery).get(result.lastInsertRowid);
+
+    //if the row exists, return the link
+    if (row) {
+        return row.link;
+    }
+    else {
+        return null;
+    }
 };
 
 // Fetch all audio files
-const getAll = async () => {
-    const [rows] = await pool.query("SELECT * FROM audio_files");
-    return rows;
+const getAll = () => {
+    const statement = db.prepare("SELECT * FROM audio_files");
+    return statement.all();
 };
 
 // Fetch audio files by tag
-const getFiltered = async (tagName) => {
+const getFiltered = (tagName) => {
     const query = `
         SELECT af.*
         FROM audio_files af
@@ -40,70 +48,118 @@ const getFiltered = async (tagName) => {
         JOIN tags t ON aft.FK_tag_id = t.id
         WHERE t.tag_name = ?;
     `;
-    const [rows] = await pool.query(query, [tagName]);
-    return rows;
+
+    const statement = db.prepare(query);
+    return statement.all(tagName);
 };
 
 // Fetch an audio file by its ID
-const getById = async (audioId) => {
-    const [rows] = await pool.query("SELECT * FROM audio_files WHERE id = ?", [audioId]);
-    return rows[0];  // Only one result is expected
+const getById = (audioId) => {
+    const query = "SELECT * FROM audio_files WHERE id = ?";
+
+    //.get() for one row. .all() for multiple. Remember that.
+    const row = db.prepare(query).get(audioId);
+
+    //if the row exists, return it, if not, NULL
+    return row || null;
 };
 
 // Insert a new audio file
-const uploadAudio = async (userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
+const uploadAudio = (userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
     const query = `
         INSERT INTO audio_files (FK_userID, file_name, file_path, file_desc, uploaded_at, sender, is_external, external_source, external_file_url)
-        VALUES (?, ?, ?, ?, NOW(), ?, ?, ?, ?);
+        VALUES (?, ?, ?, ?, datetime('now'), ?, ?, ?, ?);
     `;
-    const [result] = await pool.query(query, [userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl]);
-    return result.insertId;
+
+    const statement = db.prepare(query);
+    const result = statement.run(userID, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileUrl);
+
+    //lastInsertRowid works the same as insertId in MySQL
+    return result.lastInsertRowid;
 };
 
+
 //delete the audio files with associated ID
-const deleteAudio = async (audioId) => {
-    const [result] = await pool.query(`DELETE FROM audio_files WHERE id = ?`, [audioId]);
-    return result;
+const deleteAudio = (audioId) => {
+    const query = `DELETE FROM audio_files WHERE id = ?`;
+
+    const statement = db.prepare(query);
+    const result = statement.run(audioId);
+
+    //`changes` is the number of rows affected by the DELETE query
+    return result.changes;
 };
 
 // Fetch all tags
-const getTags = async () => {
-    const [rows] = await pool.query("SELECT * FROM tags");
-    return rows;
+const getTags = () => {
+    const statement = db.prepare("SELECT * FROM tags");
+
+    //similar functionality to getAll, still returning an array of objects
+    return statement.all();
 };
 
 // Get tags assigned to a specific audio file
-const getTagsByAudioId = async (audioId) => {
+const getTagsByAudioId = (audioId) => {
     const query = `
         SELECT t.tag_name 
         FROM tags t
         JOIN audio_file_tags aft ON t.id = aft.FK_tag_id
         WHERE aft.FK_audio_id = ?;
     `;
-    const [rows] = await pool.query(query, [audioId]);
+
+    const statement = db.prepare(query);
+    const rows = statement.all(audioId);
+
+    /*tag_name is the field for these objects;
+        [
+            {"tag_name": "happy"},
+            {"tag_name": "sad"},
+            etc...    
+        ]
+    */
     return rows;
 };
 
+
 // Insert a new tag or get the existing one
-const addTag = async (tagName) => {
-    const query = `INSERT INTO tags (tag_name) VALUES (?) ON DUPLICATE KEY UPDATE id=LAST_INSERT_ID(id);`;
-    const [result] = await pool.query(query, [tagName]);
-    return result.insertId;
+const addTag = (tagName) => {
+    //INSERT OR REPLACE INTO serves as a replacement for the ON DUPLICATE KEY UPDATE constraint
+    const query = `
+        INSERT OR REPLACE INTO tags (id, tag_name)
+        VALUES (
+            (SELECT id FROM tags WHERE tag_name = ? LIMIT 1), 
+            ?
+        );
+    `;
+
+    const statement = db.prepare(query);
+    const result = statement.run(tagName, tagName);
+    return result.lastInsertRowid;
 };
 
-// Link an audio file with a tag
-const assignTag = async (audioId, tagId) => {
-    const query = `INSERT INTO audio_file_tags (FK_audio_id, FK_tag_id) VALUES (?, ?) ON DUPLICATE KEY UPDATE FK_audio_id=FK_audio_id;`;
-    await pool.query(query, [audioId, tagId]);
+
+// Link an audio file with a tag in SQLite
+const assignTag = (audioId, tagId) => {
+    const query = `
+        INSERT OR IGNORE INTO audio_file_tags (FK_audio_id, FK_tag_id)
+        VALUES (?, ?);
+    `;
+    db.prepare(query).run(audioId, tagId);
 };
+
 
 // Remove a tag from an audio file
-const removeTag = async (audioId, tagId) => {
-    await pool.query("DELETE FROM audio_file_tags WHERE FK_audio_id = ? AND FK_tag_id = ?", [audioId, tagId]);
+const removeTag = (audioId, tagId) => {
+    const query = `
+        DELETE FROM audio_file_tags
+        WHERE FK_audio_id = ? AND FK_tag_id = ?;
+    `;
+    const statement = db.prepare(query);
+    statement.run(audioId, tagId);
 };
 
 // Fetch all audio files matching a given tag name
-const getAudioFilesByTagName = async (tagName) => {
+const getAudioFilesByTagName = (tagName) => {
     const query = `
         SELECT af.* 
         FROM audio_files af
@@ -111,12 +167,13 @@ const getAudioFilesByTagName = async (tagName) => {
         JOIN tags t ON aft.FK_tag_id = t.id
         WHERE t.tag_name = ?;
     `;
-    const [rows] = await pool.query(query, [tagName]);
-    return rows;
+    
+    const statement = db.prepare(query);
+    return statement.all(tagName);
 };
 
 // Database function to update audio file metadata
-const updateAudio = async (fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
+const updateAudio = (fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl) => {
     // Constructing the SET clause dynamically based on the provided data
     let setClause = '';
     let values = [];
@@ -161,36 +218,41 @@ const updateAudio = async (fileId, fileName, fileDesc, sender, isExternal, exter
     values.push(fileId);
 
     try {
-        const [result] = await pool.query(query, values);
-
-        // If no rows were updated, return null (audio file not found)
-        if (result.affectedRows === 0) {
-            return null;
+        const statement = db.prepare(query);
+        statement.run(...values);
+    
+        // Check if any rows were updated (i.e., affected)
+        if (db.changes === 0) {
+            return null; // No rows were updated, so return null
         }
-
+    
         // Fetch and return the updated audio file
         const updatedFileQuery = 'SELECT * FROM audio_files WHERE id = ?';
-        const [updatedFile] = await pool.query(updatedFileQuery, [fileId]);
-
-        return updatedFile[0]; // Return the updated file record
-    } catch (error) {
+        const updatedFileStatement = db.prepare(updatedFileQuery);
+        const updatedFile = updatedFileStatement.get(fileId);
+    
+        return updatedFile || null; // Return the updated file record
+    }
+    catch (error) {
         console.error("Error updating audio file:", error);
         throw new Error("Failed to update audio file.");
     }
 };
 
-const updateTags = async (audioId, tagId) => {
+const updateTags = (audioId, tagId) => {
     try {
         // Run the update query
-        const [result] = await pool.query("UPDATE audio_file_tags SET FK_tag_id = ? WHERE FK_audio_id = ?", [tagId, audioId]);
+        const statement = db.prepare("UPDATE audio_file_tags SET FK_tag_id = ? WHERE FK_audio_id = ?");
+        const result = statement.run(tagId, audioId);
 
         // Return the result to the controller
-        return { success: result.affectedRows > 0 };
+        return { success: result.changes > 0 };
     } catch (error) {
         console.error("Error updating tags:", error);
         throw error;  // Rethrow the error to be caught by the controller
     }
 };
+
 
 // Export all functions
 export default {
