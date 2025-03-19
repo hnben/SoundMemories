@@ -23,9 +23,9 @@ import db from '../Db/db.js';
 // };
 
 // Get all audio files
-const getAll = async (req, res) => {
+const getAll = (req, res) => {
     try {
-        const data = await db.getAll();
+        const data = db.getAll();
         if (!data || data.length === 0) {
             return res.status(404).json({ message: "No audio files found." });
         }
@@ -37,10 +37,10 @@ const getAll = async (req, res) => {
 };
 
 // Get filtered audio files based on a tag
-const getFiltered = async (req, res) => {
+const getFiltered = (req, res) => {
     try {
         const filter = req.params.filter;
-        const list = await db.getFiltered(filter);
+        const list = db.getFiltered(filter);
 
         if (!list || list.length === 0) {
             return res.status(404).json({ message: "No matching audio files found." });
@@ -54,10 +54,10 @@ const getFiltered = async (req, res) => {
 };
 
 // Get audio file by ID
-const getById = async (req, res) => {
+const getById = (req, res) => {
     try {
         const { id } = req.params;
-        const file = await db.getById(id);
+        const file = db.getById(id);
 
         if (!file) {
             return res.status(404).json({ message: "Audio file not found." });
@@ -71,10 +71,10 @@ const getById = async (req, res) => {
 };
 
 // Upload a new audio file
-const uploadAudio = async (req, res) => {
+const uploadAudio = (req, res) => {
     try {
         const { userId, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileId, externalFileUrl } = req.body;
-        const newFile = await db.uploadAudio(userId, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileId, externalFileUrl);
+        const newFile = db.uploadAudio(userId, fileName, filePath, fileDesc, sender, isExternal, externalSource, externalFileId, externalFileUrl);
 
         res.status(201).json({ message: "Audio file uploaded successfully.", newFile });
     } catch (error) {
@@ -84,12 +84,12 @@ const uploadAudio = async (req, res) => {
 };
 
 // Delete an audio file
-const deleteAudio = async (req, res) => {
+const deleteAudio = (req, res) => {
     try {
         const { id } = req.params;
-        const result = await db.deleteAudio(id);
+        const result = db.deleteAudio(id);
 
-        if (result.affectedRows === 0) {
+        if (result.changes === 0) {
             return res.status(404).json({ message: "Audio file not found or already deleted." });
         }
 
@@ -101,9 +101,9 @@ const deleteAudio = async (req, res) => {
 };
 
 // Get all tags
-const getTags = async (req, res) => {
+const getTags = (req, res) => {
     try {
-        const tags = await db.getTags();
+        const tags = db.getTags();
         res.status(200).json(tags);
     } catch (error) {
         console.error("Error in getTags:", error);
@@ -112,10 +112,10 @@ const getTags = async (req, res) => {
 };
 
 // Get tags for a specific audio file
-const getTagsByAudioId = async (req, res) => {
+const getTagsByAudioId = (req, res) => {
     try {
         const { id } = req.params;
-        const tags = await db.getTagsByAudioId(id);
+        const tags = db.getTagsByAudioId(id);
 
         res.status(200).json(tags);
     } catch (error) {
@@ -125,10 +125,10 @@ const getTagsByAudioId = async (req, res) => {
 };
 
 // Assign a tag to an audio file
-const assignTag = async (req, res) => {
+const assignTag = (req, res) => {
     try {
         const { audioId, tagId } = req.body;
-        await db.assignTag(audioId, tagId);
+        db.assignTag(audioId, tagId);
         res.status(200).json({ message: "Tag assigned successfully." });
     } catch (error) {
         console.error("Error in assignTag:", error);
@@ -137,10 +137,10 @@ const assignTag = async (req, res) => {
 };
 
 // Remove a tag from an audio file
-const removeTag = async (req, res) => {
+const removeTag = (req, res) => {
     try {
         const { audioId, tagId } = req.body;
-        await db.removeTag(audioId, tagId);
+        db.removeTag(audioId, tagId);
         res.status(200).json({ message: "Tag removed successfully." });
     } catch (error) {
         console.error("Error in removeTag:", error);
@@ -148,10 +148,10 @@ const removeTag = async (req, res) => {
     }
 };
 
-const getAudioFilesByTagName = async (req, res) => {
+const getAudioFilesByTagName = (req, res) => {
     try {
         const tagName = req.params.tagName;
-        const audioFiles = await db.getAudioFilesByTagName(tagName);
+        const audioFiles = db.getAudioFilesByTagName(tagName);
         res.json(audioFiles);
     } catch (err) {
         console.error(err);
@@ -160,12 +160,12 @@ const getAudioFilesByTagName = async (req, res) => {
 };
 
 // Update an existing audio file's metadata
-const updateAudio = async (req, res) => {
+const updateAudio = (req, res) => {
     try {
         const { fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl } = req.body;
 
         // Call the updateAudio function from the database
-        const updatedFile = await db.updateAudio(fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl);
+        const updatedFile = db.updateAudio(fileId, fileName, fileDesc, sender, isExternal, externalSource, externalFileUrl);
 
         if (!updatedFile) {
             return res.status(404).json({ message: "Audio file not found or no changes made." });
@@ -181,14 +181,14 @@ const updateAudio = async (req, res) => {
     }
 };
 
-const updateTags = async (req, res) => {
+const updateTags = (req, res) => {
     try {
         const { audioId, tagId } = req.body;
         if (!audioId || !tagId) {
             return res.status(400).json({ error: "Missing required fields: audioId and tagId" });
         }
 
-        const result = await db.updateTags(audioId, tagId);
+        const result = db.updateTags(audioId, tagId);
 
         if (!result.success) {
             return res.status(404).json({ error: "No matching audio file found to update" });
