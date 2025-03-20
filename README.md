@@ -10,3 +10,7 @@ Navigate to the frontend directory `cd frontend` and run `npm install` to instal
 ## Running the Server and Frontend  
 In the base directory run `npm run dev` to start the node server on localhost:3000  
 Navigate to the frontend directory using `cd frontend` and start the React frontend using `npm run dev`, the frontend should be accessible on localhost:5175  
+
+## Running as an Application
+In the base directory run `npm run electron` to start the application
+No other action should be necessary
