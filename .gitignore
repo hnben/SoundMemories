@@ -2,3 +2,6 @@ node_modules
 scripts/mysql_data/
 out/
 config.env
+*.mp3
+audio.sqlite
+log.txt
