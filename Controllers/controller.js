@@ -1,4 +1,11 @@
 import db from '../Db/db.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import Database from 'better-sqlite3';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // function generateUniqueLink() {
 //     return `http://localhost:3000/contribute/${randomUUID()}`;
@@ -87,16 +94,34 @@ const uploadAudio = (req, res) => {
 const deleteAudio = (req, res) => {
     try {
         const { id } = req.params;
-        const result = db.deleteAudio(id);
 
+        //getting the filepath
+        const fileRecord = db.getById(id);
+        if (!fileRecord) {
+            return res.status(404).json({ message: "Audio file not found in database." });
+        }
+        const filePath = path.join(__dirname, '../', fileRecord.file_path);
+
+        // Attempt to delete the file from disk
+        if (fs.existsSync(filePath)) {
+            fs.unlinkSync(filePath);
+            console.log(`Deleted file: ${filePath}`);
+        }
+        else {
+            console.warn(`File not found on disk: ${filePath}`);
+        }
+
+        // Attempt to delete the file from database
+        const result = db.deleteAudio(id);
         if (result.changes === 0) {
             return res.status(404).json({ message: "Audio file not found or already deleted." });
         }
 
         res.status(200).json({ message: "Audio file deleted successfully." });
-    } catch (error) {
-        console.error("Error in deleteAudio:", error);
-        res.status(500).json({ message: "Internal server error." });
+    }
+    catch (error) {
+        console.error("Error in deleteAudio:", error.stack);
+        res.status(500).json({ message: "Internal server error.", error: error.message });
     }
 };
 
