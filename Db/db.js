@@ -5,7 +5,7 @@ import { plantSeeds } from './seed.js';
 // Create SQLite connection
 const db = new Database('audio.sqlite', {
     //logs to an output stream
-    verbose: log
+    verbose: console.log
   });
 
 //set up the database
