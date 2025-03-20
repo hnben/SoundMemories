@@ -4,7 +4,7 @@ export function initalizeSchema(db) {
     db.prepare(pragma).run();
     
     const createUsersTable = `CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY,  -- Auto-increments automatically
+    id INTEGER PRIMARY KEY NOT NULL,  -- Auto-increments automatically
     username TEXT UNIQUE NOT NULL,
     pass TEXT NOT NULL,       -- Stored hash
     email TEXT UNIQUE NOT NULL
@@ -12,7 +12,7 @@ export function initalizeSchema(db) {
     db.prepare(createUsersTable).run();
 
     const createAudioFilesTable = `CREATE TABLE IF NOT EXISTS audio_files (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY NOT NULL,
     FK_userID INTEGER,
     file_name TEXT NOT NULL,
     file_path TEXT,           -- Local file path
@@ -28,8 +28,8 @@ export function initalizeSchema(db) {
     db.prepare(createAudioFilesTable).run();
 
     const createTagsTable = `CREATE TABLE IF NOT EXISTS tags (
-    id INTEGER PRIMARY KEY,
-    tag_name TEXT UNIQUE NOT NULL
+    id INTEGER PRIMARY KEY NOT NULL,
+    tag_name TEXT UNIQUE
     );`;
     db.prepare(createTagsTable).run();
 
@@ -43,7 +43,7 @@ export function initalizeSchema(db) {
     db.prepare(createAudioFileTagsTable).run();
 
     const createLinksTable = `CREATE TABLE IF NOT EXISTS links (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
     links TEXT NOT NULL
     );`;
     db.prepare(createLinksTable).run();
