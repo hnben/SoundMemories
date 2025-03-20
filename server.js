@@ -15,7 +15,7 @@ app.use('/Files', express.static('Files'));
 //hello API endpoint
 app.get('/hello', (req, res) => {
     res.json({message: 'Hello test test from the backend API /hello'})
-})
+});
 
 //routes for proessing server requests
 app.use('/', router);
@@ -24,5 +24,4 @@ app.use('/', router);
 const PORT = 3000;
 app.listen(PORT,()=> {
     console.log(`Server started on ${PORT}`)
-})
-
+});
