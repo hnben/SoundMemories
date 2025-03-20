@@ -3,5 +3,6 @@ scripts/mysql_data/
 out/
 config.env
 *.mp3
+*.wav
 audio.sqlite
 log.txt
