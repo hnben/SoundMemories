@@ -27,9 +27,13 @@ export function plantSeeds(db) {
       (4, 4);`
     ];
   
-    seedData.forEach(query => {
-      db.prepare(query).run();
-    });
-  
+    //this should only run if the database is empty!
+    if (db.prepare(`SELECT COUNT(*) AS count FROM users`).get().count === 0) {
+        seedData.forEach(query => {
+            db.prepare(query).run();
+          });
+    }
+    //probably a more robust way of checking for this...
+
     console.log("Database seed data initialized.");
 }
