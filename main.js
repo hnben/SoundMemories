@@ -99,17 +99,32 @@ app.on('window-all-closed', () => {
     front.kill('SIGTERM');
 
     // Kill all node processes
-    killAllNodeProcesses();
+    killProcessOnPort(3000);
+    killProcessOnPort(5173);
   }
 });
 
-// Function to kill all node processes
-function killAllNodeProcesses() {
-  process.exec('taskkill /F /IM node.exe', (error, stdout, stderr) => {
-    if (error || stderr) {
-      log(`Error killing node processes: ${error || stderr}`);
+//kills process use port number passed in
+function killProcessOnPort(port) {
+  process.exec(`netstat -ano | findstr :${port}`, (err, stdout, stderr) => {
+    if (err || stderr) {
+      log(`Error finding process on port ${port}: ${err || stderr}`);
       return;
     }
-    log('Successfully killed all node processes');
+
+    const lines = stdout.trim().split('\n');
+    if (lines.length === 0) {
+      log(`No process found on port ${port}`);
+      return;
+    }
+
+    const pid = lines[0].trim().split(/\s+/).pop();
+    process.exec(`taskkill /PID ${pid} /F`, (err, stdout, stderr) => {
+      if (err || stderr) {
+        log(`Error killing process with PID ${pid}: ${err || stderr}`);
+        return;
+      }
+      log(`Successfully killed process with PID ${pid} on port ${port}`);
+    });
   });
 }
