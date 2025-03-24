@@ -1,7 +1,7 @@
 /* Sidebar Styling */
 .sidebar {
     width: 220px;
-    background-color: #1e1e1e; /* Darker gray for modern look */
+    background-color: #eafa0573; /* Darker gray for modern look */
     color: white;
     padding: 20px;
     min-height: 100vh;
@@ -17,6 +17,7 @@
     font-size: 1.5rem;
     margin-bottom: 20px;
     font-weight: 600;
+    color: #212121;
   }
   
   /* Navigation List */
