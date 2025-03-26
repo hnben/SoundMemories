@@ -12,6 +12,9 @@ function log(message) {
   fs.appendFileSync(logPath, `${message}\n`);
 }
 
+killProcessOnPort(3000);
+killProcessOnPort(5173);
+
 log('Starting application...');
 
 const back = process.spawn('npm', ['run', 'dev'], {
@@ -74,9 +77,6 @@ const createWindow = () => {
   }).catch(err => {
     log(`Failed to load URL: ${err}`);
   });
-
-  // Open the DevTools.
-  win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
