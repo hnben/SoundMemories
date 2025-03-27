@@ -76,7 +76,7 @@ const createWindow = () => {
   });
 
   // Open the DevTools.
-  win.webContents.openDevTools();
+  // win.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
