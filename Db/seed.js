@@ -28,7 +28,7 @@ export function plantSeeds(db) {
     ];
   
     //this should only run if the database is empty!
-    if (db.prepare(`SELECT COUNT(*) AS count FROM users`).get().count === 0) {
+    if (db.prepare(`SELECT COUNT(*) AS count FROM audio_files`).get().count === 0) {
         seedData.forEach(query => {
             db.prepare(query).run();
           });
