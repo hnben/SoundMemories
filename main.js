@@ -92,39 +92,51 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
-
     // Stop front and backend servers
     back.kill('SIGTERM');
     front.kill('SIGTERM');
 
-    // Kill all node processes
-    killProcessOnPort(3000);
-    killProcessOnPort(5173);
+    // Kill all node processes and wait for completion
+    Promise.all([
+      new Promise((resolve) => killProcessOnPort(3000, resolve)),
+      new Promise((resolve) => killProcessOnPort(5173, resolve))
+    ]).then(() => {
+      log('All processes terminated. Exiting application.');
+      app.quit();
+    });
   }
 });
 
-//kills process use port number passed in
-function killProcessOnPort(port) {
+// Modify killProcessOnPort to accept a callback
+function killProcessOnPort(port, callback) {
   process.exec(`netstat -ano | findstr :${port}`, (err, stdout, stderr) => {
     if (err || stderr) {
       log(`Error finding process on port ${port}: ${err || stderr}`);
+      if (callback) callback(); // Ensure callback is called even on error
       return;
     }
 
     const lines = stdout.trim().split('\n');
-    if (lines.length === 0) {
+    if (lines.length === 0 || !lines[0].trim()) {
       log(`No process found on port ${port}`);
+      if (callback) callback(); // Ensure callback is called if no process is found
       return;
     }
 
     const pid = lines[0].trim().split(/\s+/).pop();
+    if (!pid || pid === '0') {
+      log(`Invalid PID (${pid}) found for port ${port}`);
+      if (callback) callback(); // Ensure callback is called for invalid PID
+      return;
+    }
+
     process.exec(`taskkill /PID ${pid} /F`, (err, stdout, stderr) => {
       if (err || stderr) {
         log(`Error killing process with PID ${pid}: ${err || stderr}`);
-        return;
+      } else {
+        log(`Successfully killed process with PID ${pid} on port ${port}`);
       }
-      log(`Successfully killed process with PID ${pid} on port ${port}`);
+      if (callback) callback(); // Ensure callback is called after taskkill
     });
   });
 }
