@@ -1,22 +1,41 @@
 import './RecordAudioRequest.css';
+import PropTypes from 'prop-types';
 import RecordView from './RecordView.jsx';
+import { useEffect, useState } from 'react';
 
 const RecordAudioRequest = () => {
-  // Define the recipient's name, selected tag, and phrase
-  const recipientName = "Angie";
-  const selectedTag = "Encouragment";
-  const phrase = "\"I know things are difficult right now, but I also know you've got what it takes to get through it.\"";
+  const [requestData, setRequestData] = useState(null);
+
+  useEffect(() => {
+    const data = localStorage.getItem("requestAudioData");
+    if (data) {
+      setRequestData(JSON.parse(data))
+    }
+  }, [])
+
+  if (!requestData) return <p>No request found.</p>
 
   return (
     <div className="recording-entire-container">
       <h1>
-        {recipientName} has requested <br /> for you to send an audio message
+        Angela has requested <br /> for you to send an audio message
       </h1>
-      <h4>{selectedTag}</h4>
-      <p className="phrase">{phrase}</p>
+      <h4>{requestData.selectedTag}</h4>
+      <p className="phrase">{requestData.phrase}</p>
       <RecordView />
     </div>
   );
+};
+
+RecordAudioRequest.propTypes = {
+  data: PropTypes.array.isRequired,
+  recipientName: PropTypes.string.isRequired,
+  email: PropTypes.string.isRequired,
+  selectedTag: PropTypes.string.isRequired,
+  phrase: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  onClose: PropTypes.func.isRequired,
+  children: PropTypes.node,
 };
 
 export default RecordAudioRequest;
