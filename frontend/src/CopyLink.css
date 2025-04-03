@@ -14,7 +14,7 @@
 
 /* Modal Content */
 .modal-link-content {
-    background-color: #fff;
+    background-color: #2a2a2a;
     padding: 20px;
     border-radius: 5px;
     width: 80%;
@@ -64,13 +64,13 @@
     font-size: 16px;
     cursor: pointer;
     border: none;
-    background-color: grey;
+    background-color: #444;
     color: #fff;
     border-radius: 5px;
 }
 
 .close-button:hover {
-    background-color: rgb(100, 99, 99);
+    background-color: #666;
 }
 
 .copy-link-button {
@@ -78,11 +78,11 @@
     font-size: 16px;
     cursor: pointer;
     border: none;
-    background-color: green;
+    background-color: #28a745;
     color: #fff;
     border-radius: 5px;
 }
 
 .copy-link-button:hover {
-    background-color: rgb(2, 107, 2);
+    background-color: #218838;
 }

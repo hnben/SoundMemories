@@ -62,7 +62,23 @@ front.on('exit', (code, signal) => {
   log(`Frontend process exited with code ${code} and signal ${signal}`);
 });
 
-const createWindow = () => {
+const waitForVite = async () => {
+  const check = async () => {
+    try {
+      await fetch('http://localhost:5173');
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  while (!(await check())) {
+    console.log("Waiting for Vite to start...");
+    await new Promise(resolve => setTimeout(resolve, 1000));
+  }
+};
+
+const createWindow = async () => {
   log('Creating window...');
   const win = new BrowserWindow({
     width: 800,
@@ -73,6 +89,8 @@ const createWindow = () => {
     }
   });
 
+
+  await waitForVite();
   win.loadURL('http://localhost:5173').then(() => {
     log('Loaded URL: http://localhost:5173');
   }).catch(err => {

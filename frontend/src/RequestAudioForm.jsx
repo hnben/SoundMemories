@@ -5,9 +5,9 @@ import CopyLink from './CopyLink.jsx';
 
 const RequestAudioForm = ({ isOpen, onClose, children }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [inputValue1, setInputValue1] = useState('');
-  const [inputValue2, setInputValue2] = useState('');
-  const [inputValue3, setInputValue3] = useState('');
+  const [inputName, setinputName] = useState('');
+  const [inputEmail, setinputEmail] = useState('');
+  const [inputPhrase, setPhrase] = useState('');
   const [selectedTag, setSelectedTag] = useState(null);
 
   if (!isOpen) return null;
@@ -16,16 +16,16 @@ const RequestAudioForm = ({ isOpen, onClose, children }) => {
     e.stopPropagation();
   };
 
-  const handleInputChange1 = (e) => {
-    setInputValue1(e.target.value);
+  const handleNameChange = (e) => {
+    setinputName(e.target.value);
   };
 
-  const handleInputChange2 = (e) => {
-    setInputValue2(e.target.value);
+  const handleEmailChange = (e) => {
+    setinputEmail(e.target.value);
   };
 
-  const handleInputChange3 = (e) => {
-    setInputValue3(e.target.value);
+  const handlePhraseChange = (e) => {
+    setPhrase(e.target.value);
   };
 
   const handleTagChange = (e) => {
@@ -35,10 +35,17 @@ const RequestAudioForm = ({ isOpen, onClose, children }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Input 1:', inputValue1);
-    console.log('Input 2:', inputValue2);
-    console.log('Input 3:', inputValue3);
-    console.log('Selected Tag:', selectedTag);
+
+    const submittedData = {
+      name: inputName,
+      email: inputEmail,
+      selectedTag: selectedTag,
+      phrase: inputPhrase,
+    }
+
+    console.log(selectedTag);
+
+    localStorage.setItem("requestAudioData", JSON.stringify(submittedData));
     setIsModalOpen(true);
   };
 
@@ -50,11 +57,11 @@ const RequestAudioForm = ({ isOpen, onClose, children }) => {
         <form onSubmit={handleSubmit} className="form-style">
           <div className="form-group">
             <label htmlFor="name">Name</label>
-            <input id="name" type="text" value={inputValue1} onChange={handleInputChange1} required />
+            <input id="name" type="text" value={inputName} onChange={handleNameChange} required />
           </div>
           <div className="form-group">
             <label htmlFor="email">Email</label>
-            <input id="email" type="email" value={inputValue2} onChange={handleInputChange2} required />
+            <input id="email" type="email" value={inputEmail} onChange={handleEmailChange} required />
           </div>
           <div className="form-group">
             <label id="tagOptions">Choose a Tag</label>
@@ -71,38 +78,38 @@ const RequestAudioForm = ({ isOpen, onClose, children }) => {
 
               <input
                 type="radio"
-                id="love"
+                id="happy"
                 name="options"
                 className="radio-input"
-                checked={selectedTag === 'love'}
+                checked={selectedTag === 'happy'}
                 onChange={handleTagChange}
               />
-              <label htmlFor="love" className="radio-label">Love</label>
+              <label htmlFor="happy" className="radio-label">Happy</label>
 
               <input
                 type="radio"
-                id="support"
+                id="random"
                 name="options"
                 className="radio-input"
-                checked={selectedTag === 'support'}
+                checked={selectedTag === 'random'}
                 onChange={handleTagChange}
               />
-              <label htmlFor="support" className="radio-label">Support</label>
+              <label htmlFor="random" className="radio-label">Random</label>
 
               <input
                 type="radio"
-                id="journey"
+                id="sad"
                 name="options"
                 className="radio-input"
-                checked={selectedTag === 'journey'}
+                checked={selectedTag === 'sad'}
                 onChange={handleTagChange}
               />
-              <label htmlFor="journey" className="radio-label">Journey</label>
+              <label htmlFor="sad" className="radio-label">Sad</label>
             </div>
           </div>
           <div className="form-group">
             <label htmlFor="phrase">What phrase would you like them to record?</label>
-            <input id="phrase" type="text" value={inputValue3} onChange={handleInputChange3} required />
+            <input id="phrase" type="text" value={inputPhrase} onChange={handlePhraseChange} required />
           </div>
           <button className="submit-btn" type="submit">Submit</button>
         </form>

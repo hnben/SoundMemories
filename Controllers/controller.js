@@ -6,28 +6,6 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// function generateUniqueLink() {
-//     return `http://localhost:3000/contribute/${randomUUID()}`;
-// }
-
-// const createContributionRequest = async (req, res) => {
-//     try {
-//         // Generate a unique link
-//         const uniqueLink = generateUniqueLink();
-        
-//         console.log('Generated Unique Link:', uniqueLink);
-
-//         // Insert the unique link into the database
-//         const newLink = await db.createContributionRequest(uniqueLink);
-
-//         // Respond with the new link
-//         res.status(201).json({ message: 'Success', link: newLink });
-//     } catch (error) {
-//         console.error('Error creating contribution request:', error);
-//         res.status(500).json({ message: 'Error creating request' });
-//     }
-// };
-
 // Get all audio files
 const getAll = (req, res) => {
     try {

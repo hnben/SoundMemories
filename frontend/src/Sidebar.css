@@ -34,7 +34,7 @@
     width: 100%;
   }
   
-  .sidebar a {
+  .sidebar a, #request-audio-form {
     display: block;
     text-decoration: none;
     color: white;
@@ -47,13 +47,13 @@
   }
   
   /* Hover Effect */
-  .sidebar a:hover {
+  .sidebar a:hover, #request-audio-form:hover {
     background: #444;
     transform: translateX(5px);
   }
   
   /* Active Link */
-  .sidebar a.active {
+  .sidebar a.active, #request-audio-form.active {
     background: #555;
     font-weight: bold;
   }
@@ -67,7 +67,7 @@
     .sidebar h2 {
       font-size: 1.2rem;
     }
-    .sidebar a {
+    .sidebar a, #request-audio-form {
       font-size: 0.9rem;
       padding: 10px;
     }

@@ -1,14 +1,33 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ReactMediaRecorder } from 'react-media-recorder';
 import './RecordView.css';
 
 const RecordView = () => {
+  const [requestData, setRequestData] = useState({});
+
+  const TAG_IDS = {
+    encouragement: 1,
+    happy: 2,
+    random: 3,
+    sad: 4
+  }
+
+  useEffect(() => {
+    const data = localStorage.getItem("requestAudioData");
+    const parsedData = data ? JSON.parse(data) : {};
+    setRequestData(parsedData);
+  }, []);
+
+  useEffect(() => {
+    if (requestData !== null) {
+      console.log("Retrieved requestData:", requestData);
+    }
+  }, [requestData]);
+
   const [audioFile, setAudioFile] = useState(null);
   const [mediaBlobUrl, setMediaBlobUrl] = useState(null);
-  const [receiverName, setReceiverName] = useState("Dad");
   const [audioDescription, setDescription] = useState("A heartfelt message to lift your spirits during challenging times.");
-  const [selectedTagState, setSelectedTagState] = useState(1);
-
+  
   const handleStopRecording = async (blobUrl, blob) => {
     setMediaBlobUrl(blobUrl);
     const recordedFile = new File([blob], "recorded_audio.wav", { type: "audio/wav" });
@@ -42,7 +61,7 @@ const RecordView = () => {
           fileName: uploadData.filename,
           filePath,
           description: audioDescription,
-          sender: receiverName,
+          sender: requestData.name,
           isExternal: 0,
           externalSource: "",
           externalFileId: "",
@@ -53,20 +72,18 @@ const RecordView = () => {
       const audioData = await audioRes.json();
       if (!audioRes.ok) throw new Error(audioData.error);
 
-      if (selectedTagState) {
+      if (requestData.selectedTag) {
         await fetch("http://localhost:3000/audio/assign-tag", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ audioId: audioData.newFile, tagId: selectedTagState }),
+          body: JSON.stringify({ audioId: audioData.newFile, tagId: TAG_IDS[requestData.selectedTag] }),
         });
       }
 
       alert("Audio recorded and uploaded successfully!");
       setMediaBlobUrl(mediaBlobUrl);
       setAudioFile(null);
-      setReceiverName(receiverName);
       setDescription(audioDescription);
-      setSelectedTagState(selectedTagState);
     } catch (error) {
       console.error("Upload error:", error);
       alert("Upload failed");
