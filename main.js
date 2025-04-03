@@ -9,7 +9,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const logPath = `${__dirname}/log.txt`;
 
 function log(message) {
-  fs.appendFileSync(logPath, `${message}\n`);
+  const timestamp = new Date().toISOString();
+  fs.appendFileSync(logPath, `[${timestamp}] ${message}\n`);
 }
 
 killProcessOnPort(3000);
@@ -19,7 +20,7 @@ log('Starting application...');
 
 const back = process.spawn('npm', ['run', 'dev'], {
   cwd: __dirname,
-  stdio: 'pipe', // Change to 'pipe' to capture stdout and stderr
+  stdio: 'pipe', // use 'pipe' to capture stdout and stderr
   shell: true
 });
 
@@ -41,7 +42,7 @@ back.on('exit', (code, signal) => {
 
 const front = process.spawn('npx', ['vite'], {
   cwd: path.join(__dirname, 'frontend'),
-  stdio: 'pipe', // Change to 'pipe' to capture stdout and stderr
+  stdio: 'pipe', // use 'pipe' to capture stdout and stderr
   shell: true
 });
 
@@ -99,7 +100,17 @@ app.on('window-all-closed', () => {
     // Kill all node processes and wait for completion
     Promise.all([
       new Promise((resolve) => killProcessOnPort(3000, resolve)),
-      new Promise((resolve) => killProcessOnPort(5173, resolve))
+      new Promise((resolve) => killProcessOnPort(5173, resolve)),
+      new Promise((resolve) => {
+        process.exec('taskkill /IM node.exe /F', (err, stdout, stderr) => { //kill node.exe
+          if (err || stderr) {
+            log(`Error killing all Node.js processes: ${err || stderr}`);
+          } else {
+            log('Successfully killed all Node.js processes');
+          }
+          resolve();
+        });
+      })
     ]).then(() => {
       log('All processes terminated. Exiting application.');
       app.quit();
@@ -107,7 +118,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-// Modify killProcessOnPort to accept a callback
+// kill process using port
 function killProcessOnPort(port, callback) {
   process.exec(`netstat -ano | findstr :${port}`, (err, stdout, stderr) => {
     if (err || stderr) {
