@@ -115,3 +115,50 @@
       width: 90%;
   }
 }
+
+/* Light Mode Support */
+@media (prefers-color-scheme: light) {
+  .form-container {
+    background-color: white;
+    color: black;
+  }
+
+  .file-input,
+  .text-input,
+  .select-input {
+    background-color: #f0f0f0;
+    color: black;
+    border: 1px solid #ccc;
+  }
+
+  .file-input[type="file"] {
+    background-color: #e0e0e0;
+  }
+
+  .text-input::placeholder,
+  .select-input::placeholder {
+    color: #666;
+  }
+
+  .select-input {
+    background-color: #e0e0e0;
+  }
+
+  .cancel-button {
+    background-color: #ccc;
+    color: black;
+  }
+
+  .cancel-button:hover {
+    background-color: #aaa;
+  }
+
+  .submit-button {
+    background-color: #28a745;
+    color: white;
+  }
+
+  .submit-button:hover {
+    background-color: #218838;
+  }
+}

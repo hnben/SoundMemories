@@ -179,3 +179,31 @@
         padding: 12px; /* Adjust padding */
     }
 }
+
+/* Light Mode Support */
+@media (prefers-color-scheme: light) {
+    .modal-content {
+        background-color: white;
+        color: black;
+    }
+
+    .modal-content label {
+        color: black;
+    }
+
+    .modal-content input {
+        background-color: #f0f0f0;
+        color: black;
+        border: 1px solid #ccc;
+    }
+
+    .radio-label {
+        background-color: #ddd;
+        color: black;
+    }
+
+    .radio-input:checked + .radio-label {
+        background-color: #999;
+        color: white;
+    }
+}
